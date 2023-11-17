@@ -49,5 +49,5 @@ class Ball:
         if self.position.x <= self.radius or self.position.x >= commons.screen_w - self.radius:
             self.velocity.x = -self.velocity.x * 0.8
         if self.position.y <= self.radius or self.position.y >= commons.screen_h - self.radius:
-            self.velocity.y = -self.velocity.y * 0.8
+            self.velocity.y = -self.velocity.y * 0.7
             self.velocity.x *= 0.995
