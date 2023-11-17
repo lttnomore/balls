@@ -27,18 +27,30 @@ class Ball:
         self.alive = True
 
     def update(self):
-        self.velocity.y += commons.delta_time * commons.gravity
-        self.position += self.velocity * commons.delta_time
-
+        if abs(self.velocity.y) < 20 and self.position.y >= commons.screen_h - self.radius + 1:
+            self.velocity.y = 0
+        else:
+            self.velocity.y += commons.delta_time * commons.gravity
         self.check_screen_collisions()
+        self.position += self.velocity * commons.delta_time
 
     def draw(self):
         top_left_position = self.position - self.radius
         commons.screen.blit(self.image, top_left_position.make_int_tuple())
 
-
     def check_screen_collisions(self):
-        if self.position.x < self.radius or self.position.x > commons.screen_w - self.radius:
-            self.velocity.x = -self.velocity.x * 0.9
-        if self.position.y < self.radius or self.position.y > commons.screen_h - self.radius:
-            self.velocity.y = -self.velocity.y * 0.9
+        if self.position.y >= commons.screen_h - self.radius * 1.05:
+            self.position.y = commons.screen_h - self.radius
+        # elif self.position.y < self.radius:
+        #     self.position.y = self.radius
+
+        if self.position.x < self.radius:
+            self.position.x = self.radius
+        elif self.position.x > commons.screen_w - self.radius:
+            self.position.x = commons.screen_w - self.radius
+
+        if self.position.x <= self.radius or self.position.x >= commons.screen_w - self.radius:
+            self.velocity.x = -self.velocity.x * 0.8
+        if self.position.y <= self.radius or self.position.y >= commons.screen_h - self.radius:
+            self.velocity.y = -self.velocity.y * 0.8
+            self.velocity.x *= 0.997

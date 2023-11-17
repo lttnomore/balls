@@ -10,7 +10,6 @@ from states import GameState, PlayState, MenuState
 
 
 def update():
-    entities.check_balls_collisions()
     entities.update_balls()
 
 
@@ -25,7 +24,6 @@ commons.screen = pygame.display.set_mode((commons.screen_w, commons.screen_h))
 
 pygame.display.set_caption("Balls")
 app_running = True
-delta_time = 0.0
 clock = pygame.time.Clock()
 
 mouse_position = (0, 0)
@@ -39,11 +37,13 @@ while app_running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 app_running = False
+            if event.key == pygame.K_r:
+                entities.delete_balls()
         elif event.type == pygame.KEYUP:
             pass
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                entities.balls.append(Ball(Vector(event.pos[0], event.pos[1]), vector.random_vector() * 200))
+                entities.balls.append(Ball(Vector(event.pos[0], event.pos[1])))
 
     update()
     draw()
