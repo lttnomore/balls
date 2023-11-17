@@ -27,10 +27,7 @@ class Ball:
         self.alive = True
 
     def update(self):
-        if abs(self.velocity.y) < 20 and self.position.y >= commons.screen_h - self.radius + 1:
-            self.velocity.y = 0
-        else:
-            self.velocity.y += commons.delta_time * commons.gravity
+        self.velocity.y += commons.delta_time * commons.gravity
         self.check_screen_collisions()
         self.position += self.velocity * commons.delta_time
 
@@ -41,8 +38,8 @@ class Ball:
     def check_screen_collisions(self):
         if self.position.y >= commons.screen_h - self.radius * 1.05:
             self.position.y = commons.screen_h - self.radius
-        # elif self.position.y < self.radius:
-        #     self.position.y = self.radius
+        elif self.position.y < self.radius:
+            self.position.y = self.radius
 
         if self.position.x < self.radius:
             self.position.x = self.radius
@@ -53,4 +50,4 @@ class Ball:
             self.velocity.x = -self.velocity.x * 0.8
         if self.position.y <= self.radius or self.position.y >= commons.screen_h - self.radius:
             self.velocity.y = -self.velocity.y * 0.8
-            self.velocity.x *= 0.997
+            self.velocity.x *= 0.995

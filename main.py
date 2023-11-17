@@ -28,7 +28,6 @@ clock = pygame.time.Clock()
 
 mouse_position = (0, 0)
 
-
 while app_running:
     mouse_position = pygame.mouse.get_pos()
     for event in pygame.event.get():
@@ -37,13 +36,16 @@ while app_running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 app_running = False
-            if event.key == pygame.K_r:
+            elif event.key == pygame.K_r:
                 entities.delete_balls()
         elif event.type == pygame.KEYUP:
             pass
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                entities.balls.append(Ball(Vector(event.pos[0], event.pos[1])))
+                x = (mouse_position[0] - commons.screen_w // 2) / commons.screen_w
+                y = mouse_position[1] / commons.screen_h
+                direction = Vector(x, y)
+                entities.balls.append(Ball(Vector(commons.screen_w // 2, 0), vector.normalize(direction) * 1000))
 
     update()
     draw()
