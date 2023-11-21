@@ -38,6 +38,7 @@ class Ball:
     def check_screen_collisions(self):
         if self.position.y >= commons.screen_h - self.radius * 1.05:
             self.position.y = commons.screen_h - self.radius
+            #self.alive = False
         elif self.position.y < self.radius:
             self.position.y = self.radius
 

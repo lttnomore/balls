@@ -4,10 +4,11 @@ import vector
 import states
 import entities
 
+from pin import Pin
 from ball import Ball
 from vector import Vector
+from trajectory import Trajectory
 from states import GameState, PlayState, MenuState
-
 
 def update():
     if not circle_following_mouse:
@@ -25,8 +26,12 @@ def update():
         entities.check_balls_collisions()
 
 def draw():
+    global mouse_position
     commons.screen.fill((50, 50, 50))
-    entities.draw_balls()
+    entities.draw_all()
+    trajectory = Trajectory()
+    trajectory.draw_line(mouse_position)
+    print(trajectory.end.x, trajectory.end.y)
 
 pygame.init()
 
@@ -57,12 +62,12 @@ while app_running:
                 circle_following_mouse = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                x = (mouse_position[0] - commons.screen_w // 2) / commons.screen_w
-                y = mouse_position[1] / commons.screen_h
+                x = (mouse_position[0] - commons.screen_w // 2)
+                y = mouse_position[1]
                 direction = Vector(x, y)
-                entities.balls.append(Ball(Vector(commons.screen_w // 2, 0), vector.normalize(direction) * 1000))
+                entities.balls.append(Ball(Vector(commons.screen_w // 2, 16), vector.normalize(direction) * 1000))
             elif event.button == pygame.BUTTON_RIGHT:
-                entities.balls.append(Ball(Vector(mouse_position[0], mouse_position[1])))
+                entities.pins.append(Pin(Vector(mouse_position[0], mouse_position[1])))
     update()
     draw()
 
