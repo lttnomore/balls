@@ -31,7 +31,6 @@ def draw():
     entities.draw_all()
     trajectory = Trajectory()
     trajectory.draw_line(mouse_position)
-    print(trajectory.end.x, trajectory.end.y)
 
 pygame.init()
 
@@ -43,7 +42,6 @@ clock = pygame.time.Clock()
 circle_velocity = Vector(0, 0)
 circle_following_mouse = False
 mouse_position = (0, 0)
-
 while app_running:
     mouse_position = pygame.mouse.get_pos()
     for event in pygame.event.get():
@@ -70,7 +68,6 @@ while app_running:
                 entities.pins.append(Pin(Vector(mouse_position[0], mouse_position[1])))
     update()
     draw()
-
     pygame.display.flip()
     commons.delta_time = 0.001 * clock.tick(144)
 

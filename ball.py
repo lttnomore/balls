@@ -19,7 +19,6 @@ class Ball:
 
         self.radius = radius
         self.diameter = radius * 2.0
-
         self.image = image
         if self.image is None:
             self.image = images.ball_default
@@ -27,9 +26,9 @@ class Ball:
         self.alive = True
 
     def update(self):
-        self.velocity.y += commons.delta_time * commons.gravity
+        self.velocity.y += commons.time_step * commons.gravity
         self.check_screen_collisions()
-        self.position += self.velocity * commons.delta_time
+        self.position += self.velocity * commons.time_step
 
     def draw(self):
         top_left_position = self.position - self.radius

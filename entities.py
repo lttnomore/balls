@@ -43,15 +43,14 @@ def check_balls_collisions():
                 normal = vector.normalize(balls[j].position - balls[i].position)
 
                 impulse = 2 * vector.dot(relative_velocity, normal) / (1 / balls[i].radius + 1 / balls[j].radius)
-                restitution = 0.01
-                impulse *= restitution
+                impulse *= commons.restitution
 
                 balls[i].velocity += impulse * normal / (1 / balls[i].radius)
                 balls[j].velocity -= impulse * normal / (1 / balls[j].radius)
 
                 overlap = balls[i].radius + balls[j].radius - distance
-                correction_factor = 0.15
-                correction = correction_factor * vector.length(relative_velocity) * commons.delta_time
+
+                correction = commons.correction_factor * vector.length(relative_velocity) * commons.time_step
                 correction_vector = normal * (overlap + correction) / 2
 
                 balls[i].position -= correction_vector
@@ -67,6 +66,7 @@ def update_pins():
         if not balls[i].alive:
             balls.pop(i)
 
+@staticmethod
 def check_hit():
     for i in range(len(balls) - 1, -1, -1):
         for j in range(len(pins) - 1, -1, -1):
@@ -88,4 +88,4 @@ def check_hit():
                 correction_vector = normal * (overlap + correction) / 2
 
                 balls[i].position -= correction_vector
-                #balls[j].position += correction_vector
+                pins.pop(j)
