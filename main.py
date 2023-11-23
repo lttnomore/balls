@@ -11,26 +11,21 @@ from trajectory import Trajectory
 from states import GameState, PlayState, MenuState
 
 def update():
-    if not circle_following_mouse:
-        entities.update_balls()
-    else:
-        global circle_velocity
-        for ball in entities.balls:
-            mouse_pos_vec = Vector(mouse_position[0], mouse_position[1])
-            diff_vec = mouse_pos_vec - ball.position
-            normalized_direction = vector.normalize(diff_vec)
-            circle_velocity += normalized_direction * 1000 * commons.delta_time
-            ball.velocity = circle_velocity
-            ball.position += circle_velocity * commons.delta_time
-            ball.check_screen_collisions()
-        entities.check_balls_collisions()
+    entities.update_balls()
+    entities.update_pins()
 
 def draw():
     global mouse_position
+    global trajectory
     commons.screen.fill((50, 50, 50))
     entities.draw_all()
-    trajectory = Trajectory()
+    trajectory.reset()
     trajectory.draw_line(mouse_position)
+
+def clear():
+    entities.delete_balls()
+    entities.delete_pins()
+
 
 pygame.init()
 
@@ -39,9 +34,8 @@ commons.screen = pygame.display.set_mode((commons.screen_w, commons.screen_h))
 pygame.display.set_caption("Balls")
 app_running = True
 clock = pygame.time.Clock()
-circle_velocity = Vector(0, 0)
-circle_following_mouse = False
 mouse_position = (0, 0)
+trajectory = Trajectory()
 while app_running:
     mouse_position = pygame.mouse.get_pos()
     for event in pygame.event.get():
@@ -51,18 +45,13 @@ while app_running:
             if event.key == pygame.K_ESCAPE:
                 app_running = False
             elif event.key == pygame.K_r:
-                entities.delete_balls()
-            elif event.key == pygame.K_SPACE:
-                circle_following_mouse = True
-                circle_velocity = Vector(0, 0)
+                clear()
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_SPACE:
                 circle_following_mouse = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                x = (mouse_position[0] - commons.screen_w // 2)
-                y = mouse_position[1]
-                direction = Vector(x, y)
+                direction = Vector(mouse_position[0] - commons.screen_w // 2, mouse_position[1])
                 entities.balls.append(Ball(Vector(commons.screen_w // 2, 16), vector.normalize(direction) * 1000))
             elif event.button == pygame.BUTTON_RIGHT:
                 entities.pins.append(Pin(Vector(mouse_position[0], mouse_position[1])))

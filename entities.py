@@ -18,6 +18,12 @@ def update_balls():
             # print(len(balls))
 
 @staticmethod
+def update_pins():
+    for i in range(len(pins) - 1, -1, -1):
+        if not pins[i].alive:
+            pins.pop(i)
+
+@staticmethod
 def draw_all():
     draw_pins()
     draw_balls()
@@ -61,10 +67,8 @@ def delete_balls():
     balls.clear()
 
 @staticmethod
-def update_pins():
-    for i in range(len(balls) - 1, -1, -1):
-        if not balls[i].alive:
-            balls.pop(i)
+def delete_pins():
+    pins.clear()
 
 @staticmethod
 def check_hit():
@@ -75,17 +79,14 @@ def check_hit():
                 relative_velocity = -balls[i].velocity
                 normal = vector.normalize(pins[j].position - balls[i].position)
 
-                impulse = 2 * vector.dot(relative_velocity, normal) / (1 / balls[i].radius )
-                restitution = 0.013
-                impulse *= restitution
+                impulse = 2 * vector.dot(relative_velocity, normal) / (1 / balls[i].radius)
+                impulse *= commons.restitution
 
                 balls[i].velocity += impulse * normal / (1 / balls[i].radius)
-                #balls[j].velocity -= impulse * normal / (1 / pins[j].radius)
 
                 overlap = balls[i].radius + pins[j].radius - distance
-                correction_factor = 0.15
-                correction = correction_factor * vector.length(relative_velocity) * commons.delta_time
+                correction = commons.correction_factor * vector.length(relative_velocity) * commons.time_step
                 correction_vector = normal * (overlap + correction) / 2
 
                 balls[i].position -= correction_vector
-                pins.pop(j)
+                pins[j].alive = False

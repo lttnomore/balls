@@ -12,23 +12,25 @@ class Trajectory:
         self.end = Vector(commons.screen_w // 2, 16)
         self.velocity = None
 
+    def reset(self):
+        self.start = Vector(commons.screen_w // 2, 16)
+        self.end = Vector(commons.screen_w // 2, 16)
+        self.velocity = None
 
     def draw_line(self, mouse_position):
-        x = (mouse_position[0] - commons.screen_w // 2)
-        y = mouse_position[1]
-        direction = Vector(x, y)
+        direction = Vector(mouse_position[0] - commons.screen_w // 2, mouse_position[1])
         self.velocity = vector.normalize(direction) * 1000
         self.start = vector.copy(self.end)
 
         iteration = 0
-        max_iterations = 100
+        max_iterations = 1000
 
         while iteration < max_iterations:
             self.velocity.y += commons.time_step * commons.gravity
-            time_vector = self.velocity * commons.time_step
-            self.end += time_vector
             self.check_screen_collisions()
             self.check_hit()
+            self.end += self.velocity * commons.time_step
+
             pygame.draw.line(commons.screen, (255, 0, 0), self.start.make_int_tuple(), self.end.make_int_tuple(), 2)
             self.start = vector.copy(self.end)
             iteration += 1
