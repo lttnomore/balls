@@ -91,7 +91,7 @@ def left(vec):
 
 @staticmethod
 def random_vector():
-    return Vector(random.random() * 2.0 - 1.0, random.random() * 2.0 - 1.0)
+    return Vector(abs(random.random()) * 760.0 + 100.0, abs(random.random()) * 520.0 + 100.0)
 
 @staticmethod
 def random_direction():

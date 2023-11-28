@@ -6,14 +6,18 @@ import vector
 from vector import Vector
 from enum import Enum
 from pygame.locals import *
+from pygame.sprite import Sprite, Group
 
 
 class BallType(Enum):
     DEFAULT = 0
 
-class Ball:
+
+class Ball(Sprite):
+    all = Group()
     def __init__(self, position: Vector, velocity: Vector = Vector(0, 0), radius: float = 8,
                  ball_type: BallType = BallType.DEFAULT, image: pygame.Surface = None):
+        super().__init__()
         self.position = vector.copy(position)
         self.velocity = vector.copy(velocity)
 
@@ -22,22 +26,22 @@ class Ball:
         self.image = image
         if self.image is None:
             self.image = images.ball_default
-        self.bounding_box = Rect(0, 0, 1, 1)
+        self.rect = self.image.get_rect(center=self.position.make_int_tuple())
         self.alive = True
 
     def update(self):
-        self.velocity.y += commons.time_step * commons.gravity
-        self.check_screen_collisions()
-        self.position += self.velocity * commons.time_step
-
-    def draw(self):
-        top_left_position = self.position - self.radius
-        commons.screen.blit(self.image, top_left_position.make_int_tuple())
+        if not self.alive:
+            self.kill()
+        else:
+            self.rect = self.image.get_rect(center=self.position.make_int_tuple())
+            self.velocity.y += commons.delta_time * commons.gravity
+            self.check_screen_collisions()
+            self.position += self.velocity * commons.delta_time
 
     def check_screen_collisions(self):
         if self.position.y >= commons.screen_h - self.radius * 1.05:
-            self.position.y = commons.screen_h - self.radius
-            #self.alive = False
+            # self.position.y = commons.screen_h - self.radius
+            self.alive = False
         elif self.position.y < self.radius:
             self.position.y = self.radius
 
