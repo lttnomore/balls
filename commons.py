@@ -7,6 +7,6 @@ gravity = 800
 restitution = 0.013
 correction_factor = 0.15
 alpha = 0.1
-trajectory_points = 40
+trajectory_points = 80
 fps = 144
 screen = None
