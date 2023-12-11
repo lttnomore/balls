@@ -1,12 +1,10 @@
-
-screen_w = 960
-screen_h = 720
 time_step = 0.013
 delta_time = 0.006
 gravity = 800
 restitution = 0.013
 correction_factor = 0.15
-alpha = 0.1
 trajectory_points = 80
-fps = 144
-screen = None
+speed = 1000
+
+smoothed_delta_time = 0.008
+smoothing_factor = 0.9
