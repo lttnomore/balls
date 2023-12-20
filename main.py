@@ -1,9 +1,10 @@
+import sys
 import pygame
-
 import commons
+
 from sprites import *
 from config import *
-import sys
+
 
 class Game:
     def __init__(self):
@@ -68,7 +69,7 @@ class Game:
                         Pin(self, random.random() * 760.0 + 100.0, random.random() * 520.0 + 100.0)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_position = pygame.mouse.get_pos()
-                if event.button == pygame.BUTTON_LEFT:
+                if event.button == pygame.BUTTON_LEFT and not len(self.balls):
                     self.total_damage = 0
                     direction = pygame.Vector2(mouse_position[0] - WINDOW_WIDTH // 2, mouse_position[1])
                     Ball(self, WINDOW_WIDTH // 2, 16, direction.normalize() * commons.speed)
@@ -81,7 +82,9 @@ class Game:
 
     def draw(self):
         self.screen.fill((50, 50, 50))
-        self.calc_trajectory()
+        self.trajectory.empty()
+        if not len(self.balls):
+            self.calc_trajectory()
         self.calc_dt()
         self.info()
         self.all_sprites.draw(self.screen)
@@ -103,20 +106,15 @@ class Game:
         pass
 
     def info(self):
-        fps_text = self.font.render(f"FPS: {int(self.clock.get_fps())}", True, BLACK)
-        delta_time_text = self.font.render(f"Delta Time: {commons.delta_time:.6f}", True, BLACK)
-        balls = self.font.render(f"Balls: {len(self.balls)}", True, BLACK)
-        pins = self.font.render(f"Pins: {len(self.pins)}", True, BLACK)
-
-        self.screen.blit(fps_text, (10, 10))
-        self.screen.blit(delta_time_text, (10, 50))
-        self.screen.blit(balls, (10, 90))
-        self.screen.blit(pins, (10, 130))
+        self.screen.blit(self.font.render(f"FPS: {int(self.clock.get_fps())}", True, BLACK), (10, 10))
+        self.screen.blit(self.font.render(f"Delta Time: {commons.delta_time:.6f}", True, BLACK), (10, 50))
+        self.screen.blit(self.font.render(f"Balls: {len(self.balls)}", True, BLACK), (10, 90))
+        self.screen.blit(self.font.render(f"Pins: {len(self.pins)}", True, BLACK), (10, 130))
         self.screen.blit(self.font.render(f"Coins: {self.coins}", True, BLACK), (800, 10))
         self.screen.blit(self.font.render(f"Damage: {self.total_damage}", True, BLACK), (800, 50))
 
     def calc_trajectory(self):
-        self.trajectory.empty()
+
         mouse_position = pygame.mouse.get_pos()
         direction = pygame.Vector2(mouse_position[0] - WINDOW_WIDTH // 2, mouse_position[1])
         position = pygame.Vector2(WINDOW_WIDTH // 2, 16)

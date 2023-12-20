@@ -42,7 +42,6 @@ class Ball(pygame.sprite.Sprite):
 
     def update(self):
         if not self.alive:
-            print(self.game.total_damage)
             self.kill()
         else:
             self.rect = self.image.get_rect(center=self.position)
@@ -70,26 +69,12 @@ class Ball(pygame.sprite.Sprite):
             self.velocity[0] *= 0.995
 
         # if self.rect.y >= WINDOW_HEIGHT - self.radius:
-        #     self.velocity[1] = -self.velocity[1] * 0.7
-        #     self.velocity[0] *= 0.995
+        #     self.velocity[1] = -self.velocity[1]# * 0.7
+        #     #self.velocity[0] *= 0.995
 
     def collide_pin(self):
         hits = pygame.sprite.spritecollide(self, self.game.pins, False, pygame.sprite.collide_circle)
         for pin in hits:
-
-            # normal = pygame.Vector2(pin.rect.center) - self.position
-            # normal.normalize_ip()
-            # speed_along_normal = pygame.Vector2.dot(self.velocity, normal)
-            #
-            # if speed_along_normal > 0:
-            #     overlap = self.radius + pin.radius - pygame.Vector2(pin.rect.center).distance_to(self.position)
-            #     impulse_magnitude = -(1 + commons.elasticity) * speed_along_normal
-            #     impulse = impulse_magnitude * normal
-            #
-            #     total_mass = 1 / self.mass + 1 / pin.mass
-            #
-            #     self.velocity += impulse * (1 / self.mass / total_mass)
-
             distance = pygame.Vector2(pin.rect.center).distance_to(self.position)
             relative_velocity = - self.velocity
             normal = (pin.position - self.position) / distance
@@ -100,7 +85,7 @@ class Ball(pygame.sprite.Sprite):
                 impulse = -200
 
             self.velocity += impulse * normal * self.radius
-
+            # self.velocity = self.velocity.normalize() * commons.speed
             overlap = self.radius + pin.radius - distance
             correction = commons.correction_factor * pygame.Vector2.length(relative_velocity) * commons.delta_time
             correction_vector = normal * (overlap + correction) / 2
@@ -154,6 +139,7 @@ class Pin(pygame.sprite.Sprite):
                         p.damage = self.damage
             self.kill()
             self.game.total_damage += self.damage
+
 class Trajectory(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
